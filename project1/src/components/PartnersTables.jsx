@@ -1,3 +1,5 @@
+import { Table, Button } from 'react-bootstrap';
+
 function PartnersTables({partners, columns, onEdit, onDelete}){
 // Filter columns to only show visible ones
 const visibleColumns = columns.filter(column => column.visible !== false);
@@ -6,11 +8,10 @@ const visibleColumns = columns.filter(column => column.visible !== false);
 const hasActionsColumn = visibleColumns.some(column => column.type === 'actions');
 
 return (
-  <div className="table-container">
-    <table>
+  <div className="table-responsive">
+    <Table striped bordered hover>
       <thead>
         <tr>
-            {!hasActionsColumn && <th>Actions</th>}
             {visibleColumns.map(column => (
                 <th key={column.field || column.type}>{column.label}</th>
             ))}
@@ -19,48 +20,29 @@ return (
       <tbody>
         {partners.map((partner) => (
           <tr key={partner.id}>
-            {/* Add actions column if not defined in columns prop */}
-            {!hasActionsColumn && (
-              <td className="actions-cell">
-                {onEdit && (
-                  <button 
-                    className="edit-btn" 
-                    onClick={() => onEdit(partner)}
-                  >
-                    Edit
-                  </button>
-                )}
-                {onDelete && (
-                  <button 
-                    className="delete-btn" 
-                    onClick={() => onDelete(partner.id)}
-                  >
-                    Delete
-                  </button>
-                )}
-              </td>
-            )}
-
             {visibleColumns.map(column => {
               // For actions type column, render buttons
-              if (column.type === 'actions') {
+              if (column.field === 'actions') {
                 return (
-                  <td key={`${partner.id}-actions`} className="actions-cell">
+                  <td key={`${partner.id}-actions`}>
                     {onEdit && (
-                      <button 
-                        className="edit-btn" 
+                      <Button 
+                        variant="outline-primary" 
+                        size="sm" 
+                        className="me-2" 
                         onClick={() => onEdit(partner)}
                       >
                         Edit
-                      </button>
+                      </Button>
                     )}
                     {onDelete && (
-                      <button 
-                        className="delete-btn" 
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm" 
                         onClick={() => onDelete(partner.id)}
                       >
                         Delete
-                      </button>
+                      </Button>
                     )}
                   </td>
                 );
@@ -76,7 +58,7 @@ return (
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   </div>
 );
 }

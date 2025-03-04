@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 function PartnerFormModal({ partner, isNew, onClose, onSave }) {
   const [formData, setFormData] = useState({
@@ -53,65 +54,55 @@ function PartnerFormModal({ partner, isNew, onClose, onSave }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>{isNew ? 'Add New Partner' : 'Edit Partner'}</h2>
-        
-        <div className="form-group">
-          <label htmlFor="name">First Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="surname">Last Name</label>
-          <input
-            type="text"
-            id="surname"
-            name="surname"
-            value={formData.surname}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="birthdate">Birthdate</label>
-          <input
-            type="date"
-            id="birthdate"
-            name="birthdate"
-            value={formData.birthdate}
-            onChange={handleChange}
-          />
-        </div>
-        
-        <div className="modal-actions">
-          <button 
-            className="discard-btn" 
-            onClick={handleDiscard}
-          >
-            Discard
-          </button>
-          <button 
-            className="save-btn" 
-            onClick={() => handleSave(false)}
-          >
-            Save
-          </button>
-          <button 
-            className="save-close-btn" 
-            onClick={() => handleSave(true)}
-          >
-            Save & Close
-          </button>
-        </div>
-      </div>
-    </div>
+    <Modal show={true} onHide={handleDiscard} centered backdrop="static">
+      <Modal.Header closeButton>
+        <Modal.Title>{isNew ? 'Add New Partner' : 'Edit Partner'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3" controlId="partnerName">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-3" controlId="partnerSurname">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+              type="text" 
+              name="surname"
+              value={formData.surname}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-3" controlId="partnerBirthdate">
+            <Form.Label>Birthdate</Form.Label>
+            <Form.Control
+              type="date"
+              name="birthdate"
+              value={formData.birthdate}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleDiscard}>
+          Discard
+        </Button>
+        <Button variant="primary" onClick={() => handleSave(false)}>
+          Save
+        </Button>
+        <Button variant="success" onClick={() => handleSave(true)}>
+          Save & Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
