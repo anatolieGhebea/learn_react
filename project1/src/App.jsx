@@ -2,15 +2,12 @@ import { useState, useEffect } from 'react'
 import { Container, Row, Col, Button, Accordion, Form } from 'react-bootstrap';
 import PartnersTables from './components/PartnersTables'
 import PartnerFormModal from './components/PartnerFormModal'
-
+import SettingsModal from './components/SettingsModal'
+import { usePartners } from './context/PartnersContext'
 
 function App() {
-  const [partners, setPartners] = useState([
-    { id: 1, name: 'John', surname: 'Doe', birthdate: '1985-05-15' },
-    { id: 2, name: 'Jane', surname: 'Smith', birthdate: '1990-08-22' },
-    { id: 3, name: 'Michael', surname: 'Johnson', birthdate: '1978-11-30' },
-    { id: 4, name: 'Sara', surname: 'Williams', birthdate: '1992-02-17' },
-  ]);
+  // Use the partners context instead of local state
+  const { partners, addPartner, updatePartner, deletePartner, columns } = usePartners();
 
   // Filter state
   const [filters, setFilters] = useState({
@@ -22,6 +19,9 @@ function App() {
   
   // Filtered partners state
   const [filteredPartners, setFilteredPartners] = useState(partners);
+  
+  // Settings modal state
+  const [showSettings, setShowSettings] = useState(false);
   
   // Update filtered partners when filters or partners change
   useEffect(() => {
@@ -77,17 +77,12 @@ function App() {
     partner: null
   });
 
-  const columns = [
-    { field: 'actions', label: '', visible: true },
-    { field: 'id', label: 'ID', visible: false }, 
-    { field: 'name', label: 'First Name', visible: true },
-    { field: 'surname', label: 'Last Name', visible: true },
-    { field: 'birthdate', label: 'Date of Birth', visible: true }
-  ];
-
   const handleOpenSettings = () => {
-    console.log('Settings');
-    alert('Settings page to be implemented');
+    setShowSettings(true);
+  }
+
+  const handleCloseSettings = () => {
+    setShowSettings(false);
   }
 
   const handleOpenAddModal = () => {
@@ -106,23 +101,11 @@ function App() {
     });
   };
 
-  const handleDelete = (partnerId) => {
-    setPartners(partners.filter(partner => partner.id !== partnerId));
-  };
-
   const handleSavePartner = (partnerData, shouldClose) => {
     if (modalState.isNew) {
-      // Create a new partner with a generated ID
-      const newPartner = {
-        ...partnerData,
-        id: Math.max(0, ...partners.map(p => p.id)) + 1 // Generate a new unique ID
-      };
-      setPartners([...partners, newPartner]);
+      addPartner(partnerData);
     } else {
-      // Update existing partner
-      setPartners(partners.map(partner => 
-        partner.id === partnerData.id ? partnerData : partner
-      ));
+      updatePartner(partnerData);
     }
     
     if (shouldClose) {
@@ -136,6 +119,10 @@ function App() {
       isNew: false,
       partner: null
     });
+  };
+
+  const handleDelete = (partnerId) => {
+    deletePartner(partnerId);
   };
 
   return (
@@ -245,6 +232,11 @@ function App() {
           onSave={handleSavePartner}
         />
       )}
+      
+      <SettingsModal
+        show={showSettings}
+        onClose={handleCloseSettings}
+      />
     </Container>
   )
 }
