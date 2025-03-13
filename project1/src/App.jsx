@@ -230,6 +230,7 @@ function App() {
           isNew={modalState.isNew}
           onClose={handleCloseModal}
           onSave={handleSavePartner}
+          allPartners={partners}
         />
       )}
       

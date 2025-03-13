@@ -4,12 +4,7 @@ const PartnersContext = createContext();
 
 export function PartnersProvider({ children }) {
   // Initial partners data
-  const initialPartners = [
-    { id: 1, name: 'John', surname: 'Doe', birthdate: '1985-05-15' },
-    { id: 2, name: 'Jane', surname: 'Smith', birthdate: '1990-08-22' },
-    { id: 3, name: 'Michael', surname: 'Johnson', birthdate: '1978-11-30' },
-    { id: 4, name: 'Sara', surname: 'Williams', birthdate: '1992-02-17' },
-  ];
+  const initialPartners = [];
 
   // Initial columns configuration
   const initialColumns = [
