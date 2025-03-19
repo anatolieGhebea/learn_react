@@ -21,6 +21,9 @@ function PartnerFormModal({ partner, isNew, onClose, onSave, allPartners = [] })
     associated_partners: [],
   });
 
+  // Add validation state
+  const [validationErrors, setValidationErrors] = useState({});
+
   // Initialize form when partner changes or on open
   useEffect(() => {
     if (partner && !isNew) {
@@ -73,6 +76,20 @@ function PartnerFormModal({ partner, isNew, onClose, onSave, allPartners = [] })
   };
 
   const handleSave = (shouldClose = false) => {
+    // Validate required fields
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "First Name is required";
+    if (!formData.surname.trim()) errors.surname = "Last Name is required";
+    
+    // If there are validation errors, show them and stop the save process
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    
+    // Clear any previous validation errors
+    setValidationErrors({});
+    
     if (isNew) {
       // For new partners, we just pass the form data
       onSave(formData, shouldClose);
@@ -127,7 +144,11 @@ function PartnerFormModal({ partner, isNew, onClose, onSave, allPartners = [] })
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  isInvalid={!!validationErrors.name}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {validationErrors.name}
+                </Form.Control.Feedback>
               </Form.Group>
             </div>
             
@@ -139,7 +160,11 @@ function PartnerFormModal({ partner, isNew, onClose, onSave, allPartners = [] })
                   name="surname"
                   value={formData.surname}
                   onChange={handleChange}
+                  isInvalid={!!validationErrors.surname}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {validationErrors.surname}
+                </Form.Control.Feedback>
               </Form.Group>
             </div>
           </div>
